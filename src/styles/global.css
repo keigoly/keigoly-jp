@@ -1,0 +1,104 @@
+/* src/styles/global.css - keigoly.jp portal */
+@import "tailwindcss";
+
+/* フォント読み込み */
+@import "@fontsource/shippori-mincho/400.css";
+@import "@fontsource/shippori-mincho/700.css";
+@import "@fontsource/cinzel/400.css";
+@import "@fontsource/cinzel/700.css";
+
+/* テーマ設定 (Tailwind v4) — KeigolyOfficialSite の kg- トークンを継承 */
+@theme {
+  --color-kg-bg: #0a0a0a;
+  --color-kg-surface: #1a1a1a;
+  --color-kg-text: #f0f0f0;
+  --color-kg-text-muted: #888888;
+  --color-kg-accent: #c9a861;
+  --color-kg-accent-hover: #dfc07a;
+  --color-kg-border: #2a2a2a;
+
+  --font-serif: "Shippori Mincho", serif;
+  --font-body: "Shippori Mincho", serif;
+  --font-display: "Cinzel", serif;
+
+  --animate-fade-in: fade-in 1.4s ease-out forwards;
+  --animate-rise: rise 1.2s ease-out 0.5s forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ヒーロー: 3枚クロスフェード + ケンバーンズ (JS 不使用・各6秒 x 3 = 18秒周期) */
+@keyframes hero-kb {
+  0%    { opacity: 0; transform: scale(1.08); }
+  8%    { opacity: 1; }
+  33.3% { opacity: 1; }
+  41%   { opacity: 0; transform: scale(1); }
+  100%  { opacity: 0; transform: scale(1); }
+}
+
+.hero-slide {
+  opacity: 0;
+  animation: hero-kb 18s linear infinite;
+  will-change: opacity, transform;
+}
+.hero-slide:nth-of-type(2) { animation-delay: 6s; }
+.hero-slide:nth-of-type(3) { animation-delay: 12s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { animation: none; }
+  .hero-slide:first-of-type { opacity: 1; transform: none; }
+  .animate-fade-in, .animate-rise {
+    animation-duration: 0.01ms;
+    animation-delay: 0s;
+  }
+}
+
+/* 基本スタイル */
+body {
+  background-color: var(--color-kg-bg);
+  color: var(--color-kg-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-kg-accent), transparent 60%);
+  color: white;
+}
+
+/* ガラス効果 (入口パネル地) */
+.glass {
+  background: rgba(14, 14, 14, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 入口パネルのホバー演出 */
+.gate-panel {
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+.gate-panel:hover,
+.gate-panel:focus-visible {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-kg-accent), transparent 30%);
+  box-shadow:
+    0 12px 40px rgba(201, 168, 97, 0.14),
+    inset 0 0 0 1px rgba(201, 168, 97, 0.22);
+  outline: none;
+}

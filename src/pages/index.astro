@@ -1,0 +1,131 @@
+---
+// keigoly.jp — ポータル。OFFICIAL / CLAW 二つの世界への入口。
+import "../styles/global.css";
+
+const SITE_TITLE = "KEIGOLY";
+const SITE_DESC =
+  "KEIGOLY ポータル — オフィシャルサイトと『Clawくんと歩む』への入口。";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/hero/slide-1.png", Astro.site);
+
+const gates = [
+  {
+    href: "https://official.keigoly.jp/",
+    en: "OFFICIAL",
+    ja: "オフィシャルサイト",
+    desc: "プロフィール・作品・ブログ",
+  },
+  {
+    href: "https://claw.keigoly.jp/",
+    en: "CLAW",
+    ja: "Clawくんと歩む",
+    desc: "持たざる者による AI 黙示録",
+  },
+];
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{SITE_TITLE}</title>
+    <meta name="description" content={SITE_DESC} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:title" content={SITE_TITLE} />
+    <meta property="og:description" content={SITE_DESC} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <main class="relative min-h-dvh overflow-hidden bg-kg-bg">
+      <!-- 背景スライドショー -->
+      <div class="absolute inset-0" aria-hidden="true">
+        <img
+          src="/hero/slide-1.png"
+          alt=""
+          class="hero-slide absolute inset-0 h-full w-full object-cover object-[30%_center] xl:object-center"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <img
+          src="/hero/slide-2.jpg"
+          alt=""
+          class="hero-slide absolute inset-0 h-full w-full object-cover object-[30%_center] xl:object-center"
+          loading="lazy"
+        />
+        <img
+          src="/hero/slide-3.jpg"
+          alt=""
+          class="hero-slide absolute inset-0 h-full w-full object-cover object-[30%_center] xl:object-center"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-kg-bg"
+        >
+        </div>
+      </div>
+
+      <!-- 前景 -->
+      <div
+        class="relative z-10 mx-auto flex min-h-dvh w-full max-w-5xl flex-col items-center justify-center px-6 py-20"
+      >
+        <header class="animate-fade-in text-center opacity-0">
+          <img
+            src="/logo.png"
+            alt="KEIGOLY"
+            class="mx-auto h-9 w-auto md:h-13"
+          />
+          <div class="mx-auto mt-7 h-px w-24 bg-kg-accent/80"></div>
+          <p
+            class="mt-5 font-display text-[11px] tracking-[0.45em] text-kg-text-muted md:text-xs"
+          >
+            CREATING DIGITAL EXPERIENCES
+          </p>
+        </header>
+
+        <nav
+          class="animate-rise mt-14 grid w-full max-w-3xl grid-cols-1 gap-5 opacity-0 md:grid-cols-2"
+          aria-label="サイト選択"
+        >
+          {
+            gates.map((gate) => (
+              <a
+                href={gate.href}
+                class="gate-panel glass group flex flex-col items-center gap-3 rounded-sm px-8 py-10 text-center no-underline"
+              >
+                <span class="font-display text-2xl tracking-[0.3em] text-kg-text transition-colors duration-300 group-hover:text-kg-accent md:text-3xl">
+                  {gate.en}
+                </span>
+                <span class="font-serif text-sm text-kg-text md:text-base">
+                  {gate.ja}
+                </span>
+                <span class="font-serif text-xs text-kg-text-muted">
+                  {gate.desc}
+                </span>
+                <span class="mt-3 inline-flex items-center gap-2 font-display text-[10px] tracking-[0.4em] text-kg-accent/90">
+                  ENTER
+                  <span class="inline-block h-px w-6 bg-kg-accent/70 transition-all duration-300 group-hover:w-10" />
+                </span>
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+
+      <footer class="absolute inset-x-0 bottom-5 z-10 text-center">
+        <p
+          class="font-display text-[10px] tracking-[0.3em] text-kg-text-muted/80"
+        >
+          © 2026 KEIGOLY
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

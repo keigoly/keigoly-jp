@@ -1,0 +1,22 @@
+{
+  "name": "keigoly-jp",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "keigoly.jp — KEIGOLY ポータル (official.keigoly.jp / claw.keigoly.jp への入口)",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/cinzel": "^5.2.8",
+    "@fontsource/shippori-mincho": "^5.2.8",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
