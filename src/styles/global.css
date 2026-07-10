@@ -1,4 +1,4 @@
-/* src/styles/global.css - keigoly.jp portal */
+/* src/styles/global.css - keigoly.jp portal (FromSoftware 型・斜めスライスゲート) */
 @import "tailwindcss";
 
 /* フォント読み込み */
@@ -21,44 +21,12 @@
   --font-body: "Shippori Mincho", serif;
   --font-display: "Cinzel", serif;
 
-  --animate-fade-in: fade-in 1.4s ease-out forwards;
-  --animate-rise: rise 1.2s ease-out 0.5s forwards;
+  --animate-fade-in: fade-in 1.2s ease-out forwards;
 }
 
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(28px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ヒーロー: 3枚クロスフェード + ケンバーンズ (JS 不使用・各6秒 x 3 = 18秒周期) */
-@keyframes hero-kb {
-  0%    { opacity: 0; transform: scale(1.08); }
-  8%    { opacity: 1; }
-  33.3% { opacity: 1; }
-  41%   { opacity: 0; transform: scale(1); }
-  100%  { opacity: 0; transform: scale(1); }
-}
-
-.hero-slide {
-  opacity: 0;
-  animation: hero-kb 18s linear infinite;
-  will-change: opacity, transform;
-}
-.hero-slide:nth-of-type(2) { animation-delay: 6s; }
-.hero-slide:nth-of-type(3) { animation-delay: 12s; }
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-slide { animation: none; }
-  .hero-slide:first-of-type { opacity: 1; transform: none; }
-  .animate-fade-in, .animate-rise {
-    animation-duration: 0.01ms;
-    animation-delay: 0s;
-  }
 }
 
 /* 基本スタイル */
@@ -70,7 +38,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.8;
   letter-spacing: 0.05em;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 ::selection {
@@ -78,27 +46,301 @@ body {
   color: white;
 }
 
-/* ガラス効果 (入口パネル地) */
-.glass {
-  background: rgba(14, 14, 14, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* ============================================================
+   斜めスライスゲート (FromSoftware 型)
+   - 通常時: 減光・脱色して沈む
+   - hover/focus: そのスライスだけ発色し flex-grow でわずかに拡がる
+   - モバイル(縦積み)は skewY、md 以上(横並び)は skewX
+   ============================================================ */
+
+.gates {
+  position: absolute;
+  display: flex;
+  /* モバイル: 縦積み + 横斜めシーム。skewY の角で黒が見えないよう上下にブリード */
+  flex-direction: column;
+  inset: -6vh 0;
+  gap: 3px;
 }
 
-/* 入口パネルのホバー演出 */
-.gate-panel {
-  transition:
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.4s ease,
-    box-shadow 0.4s ease;
+.gate {
+  position: relative;
+  flex: 1 1 0%;
+  display: block;
+  overflow: hidden;
+  background: #000;
+  transform: skewY(-6deg);
+  transition: flex-grow 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.gate-panel:hover,
-.gate-panel:focus-visible {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--color-kg-accent), transparent 30%);
-  box-shadow:
-    0 12px 40px rgba(201, 168, 97, 0.14),
-    inset 0 0 0 1px rgba(201, 168, 97, 0.22);
+
+/* 背景 (counter-skew + オーバースキャンで角を埋める) */
+.gate-bg {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  transform: skewY(6deg);
+  filter: brightness(0.5) saturate(0.4) contrast(1.05);
+  transition: filter 0.6s ease, transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gate-bg > img.gate-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 25% center;
+}
+
+/* CLAW スライス: 暗幕 + 紅のグロー + Clawくん立ち絵 */
+.gate-bg-claw {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 68%, rgba(190, 40, 40, 0.30), transparent 70%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(60, 14, 14, 0.55), transparent 75%),
+    linear-gradient(180deg, #070606 0%, #100a0a 55%, #150c0c 100%);
+}
+
+.claw-figure {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  height: 56%;
+  transform: translateX(-50%);
+  object-fit: contain;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.65));
+}
+
+/* ラベル (作品ロゴ相当) */
+.gate-label {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  text-align: center;
+  transform: skewY(6deg);
+  opacity: 0.62;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+/* ブリードで画面外に出る側を除き、可視領域の中央にラベルを置く */
+.gate:first-child .gate-label {
+  inset: 6vh 0 0 0;
+}
+.gate:last-child .gate-label {
+  inset: 0 0 6vh 0;
+}
+
+/* ラベル背後の暗幕 — 明るい背景 (白壁など) でも文字を立たせる */
+.gate-label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(120%, 34rem);
+  height: 60%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse 50% 50% at center,
+    rgba(0, 0, 0, 0.55),
+    transparent 72%
+  );
+  z-index: -1;
+}
+
+.gate-label .en {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 5.5vw, 3.4rem);
+  letter-spacing: 0.32em;
+  text-indent: 0.32em; /* letter-spacing の右余白ぶんを補正して視覚中央に */
+  color: var(--color-kg-text);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
+  transition: letter-spacing 0.6s ease, color 0.6s ease;
+  line-height: 1.2;
+}
+
+.gate-label .rule {
+  width: 3.5rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-kg-accent), transparent 20%);
+}
+
+.gate-label .ja {
+  font-family: var(--font-serif);
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: var(--color-kg-text);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.9);
+}
+
+.gate-label .desc {
+  font-family: var(--font-serif);
+  font-size: clamp(0.7rem, 1.6vw, 0.8rem);
+  color: var(--color-kg-text-muted);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9);
+}
+
+.gate-label .enter {
+  margin-top: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.45em;
+  color: var(--color-kg-accent);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+}
+
+.gate-label .enter::after {
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-kg-accent), transparent 30%);
+}
+
+/* hover / focus: 発色 + 拡幅 + ラベル顕現 */
+.gate:hover,
+.gate:focus-visible {
+  flex-grow: 1.5;
   outline: none;
+}
+
+.gate:hover .gate-bg,
+.gate:focus-visible .gate-bg {
+  filter: brightness(1) saturate(1);
+  transform: skewY(6deg) scale(1.03);
+}
+
+.gate:hover .gate-label,
+.gate:focus-visible .gate-label {
+  opacity: 1;
+}
+
+.gate:hover .gate-label .en,
+.gate:focus-visible .gate-label .en {
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+}
+
+.gate:hover .gate-label .enter,
+.gate:focus-visible .gate-label .enter {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* どれかに hover 中、他のスライスはさらに沈む */
+.gates:has(.gate:hover) .gate:not(:hover) .gate-bg,
+.gates:has(.gate:focus-visible) .gate:not(:focus-visible) .gate-bg {
+  filter: brightness(0.26) saturate(0.2);
+}
+
+.gates:has(.gate:hover) .gate:not(:hover) .gate-label,
+.gates:has(.gate:focus-visible) .gate:not(:focus-visible) .gate-label {
+  opacity: 0.32;
+}
+
+/* md 以上: 横並び + 縦斜めシーム (skewX) */
+@media (min-width: 768px) {
+  .gates {
+    flex-direction: row;
+    inset: 0 -9vw;
+    gap: 4px;
+  }
+
+  .gate {
+    transform: skewX(-10deg);
+  }
+
+  .gate-bg {
+    top: 0;
+    left: -18%;
+    width: 136%;
+    height: 100%;
+    transform: skewX(10deg);
+  }
+
+  .gate:hover .gate-bg,
+  .gate:focus-visible .gate-bg {
+    transform: skewX(10deg) scale(1.03);
+  }
+
+  .gate-label {
+    inset: 0;
+    transform: skewX(10deg);
+  }
+
+  .gate:first-child .gate-label {
+    inset: 0 0 0 9vw;
+  }
+
+  .gate:last-child .gate-label {
+    inset: 0 9vw 0 0;
+  }
+
+  .claw-figure {
+    bottom: 4%;
+    height: 60%;
+  }
+}
+
+/* タッチ環境 (hover なし): 常時発色・ラベル常時表示 */
+@media (hover: none) {
+  .gate-bg {
+    filter: brightness(0.72) saturate(0.85);
+  }
+  .gate-label {
+    opacity: 1;
+  }
+  .gate-label .enter {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 動きを抑える設定 */
+@media (prefers-reduced-motion: reduce) {
+  .gate,
+  .gate-bg,
+  .gate-label,
+  .gate-label .en,
+  .gate-label .enter {
+    transition: none;
+  }
+  .animate-fade-in {
+    animation-duration: 0.01ms;
+  }
+}
+
+/* ヘッダー・フッターの控えめリンク */
+.chrome-link {
+  position: relative;
+  transition: color 0.3s ease;
+}
+.chrome-link:hover,
+.chrome-link:focus-visible {
+  color: var(--color-kg-accent);
+  outline: none;
+}
+.chrome-link::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-kg-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.chrome-link:hover::after,
+.chrome-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
