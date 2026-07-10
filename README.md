@@ -1,6 +1,6 @@
 # keigoly.jp — KEIGOLY ポータル
 
-> 公開 URL: https://keigoly.jp/ (Phase 3 の apex 切替後)
+> 公開 URL: https://keigoly.jp/
 
 FromSoftware 公式サイト風の全画面ヒーローから、二つの世界へ入口を選ぶゲートウェイ。
 

@@ -3,8 +3,8 @@ main = "worker/index.ts"
 compatibility_date = "2026-07-01"
 account_id = "26daed05bc785ab06d9a96829d8d406c"
 
-# Phase 3 (apex 切替) で有効化する。それまでは workers.dev のみで配信。
-# routes = [{ pattern = "keigoly.jp", custom_domain = true }]
+# apex カスタムドメイン (2026-07-10 Phase 3 で付替済)
+routes = [{ pattern = "keigoly.jp", custom_domain = true }]
 
 [assets]
 directory = "./dist"
