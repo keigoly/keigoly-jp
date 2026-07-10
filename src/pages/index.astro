@@ -77,28 +77,13 @@ const ogImage = new URL("/hero/slide-1.png", Astro.site);
         </a>
       </div>
 
-      <!-- ヘッダー (スライスの上・ロゴとテキストナビ) -->
+      <!-- ヘッダー (スライスの上・ロゴのみ) -->
       <header
-        class="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-5 md:px-10 md:py-7"
+        class="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center px-6 py-5 md:px-10 md:py-7"
       >
         <a href="/" class="pointer-events-auto" aria-label="KEIGOLY">
           <img src="/logo.png" alt="KEIGOLY" class="h-6 w-auto md:h-8" />
         </a>
-        <nav
-          class="pointer-events-auto flex items-center gap-6 md:gap-9"
-          aria-label="サイトリンク"
-        >
-          <a
-            href="https://official.keigoly.jp/"
-            class="chrome-link font-display text-[11px] tracking-[0.3em] text-kg-text md:text-xs"
-            >OFFICIAL</a
-          >
-          <a
-            href="https://claw.keigoly.jp/"
-            class="chrome-link font-display text-[11px] tracking-[0.3em] text-kg-text md:text-xs"
-            >CLAW</a
-          >
-        </nav>
       </header>
 
       <!-- フッター (スライスの上・控えめな帯) -->

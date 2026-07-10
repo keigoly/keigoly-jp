@@ -75,10 +75,10 @@ body {
 /* 背景 (counter-skew + オーバースキャンで角を埋める) */
 .gate-bg {
   position: absolute;
-  top: -10%;
+  top: -5%;
   left: 0;
   width: 100%;
-  height: 120%;
+  height: 110%;
   transform: skewY(6deg);
   filter: brightness(0.5) saturate(0.4) contrast(1.05);
   transition: filter 0.6s ease, transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
@@ -93,7 +93,7 @@ body {
   height: 100%;
   width: auto;
   max-width: none;
-  transform: translateX(-26%);
+  transform: translateX(-37%);
 }
 
 /* 端数ずれで画像が届かない場合の保険 (黒地に馴染ませる) */
@@ -116,10 +116,11 @@ body {
   background-size: 8.333% 100%, auto, auto;
 }
 
-/* モバイルは下側ブリードのぶん高めに置く (md で下端基準に戻す) */
+/* モバイルは下側ブリードのぶん高めに置く (md で下端基準に戻す)
+   配置: 歩き姿(左) — CLAW ラベル(中) — Clawくん(右下) の並び */
 .walk-figure {
   position: absolute;
-  right: 32%;
+  right: 60%;
   bottom: 24%;
   height: 62%;
   width: auto;
@@ -130,7 +131,7 @@ body {
 
 .claw-figure {
   position: absolute;
-  right: 8%;
+  right: 30%;
   bottom: 25%;
   height: 15%;
   width: auto;
@@ -162,6 +163,8 @@ body {
 }
 .gate:last-child .gate-label {
   inset: 0 0 6vh 0;
+  /* CLAW ラベルを歩き姿と Clawくんの中間へ寄せる */
+  padding-left: 14%;
 }
 
 /* ラベル背後の暗幕 — 明るい背景 (白壁など) でも文字を立たせる */
@@ -311,20 +314,22 @@ body {
 
   .gate:last-child .gate-label {
     inset: 0 9vw 0 0;
+    padding-left: 0;
   }
 
   .gate-bg > img.gate-photo {
     transform: translateX(-20%);
   }
 
+  /* 歩き姿(左) — CLAW ラベル(中) — Clawくん(右下) */
   .walk-figure {
-    right: 44%;
+    right: 60%;
     bottom: 0;
     height: 84%;
   }
 
   .claw-figure {
-    right: 28%;
+    right: 31%;
     bottom: 5%;
     height: 20%;
   }
@@ -358,30 +363,3 @@ body {
   }
 }
 
-/* ヘッダー・フッターの控えめリンク */
-.chrome-link {
-  position: relative;
-  transition: color 0.3s ease;
-}
-.chrome-link:hover,
-.chrome-link:focus-visible {
-  color: var(--color-kg-accent);
-  outline: none;
-}
-.chrome-link::after {
-  content: "";
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--color-kg-accent);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.chrome-link:hover::after,
-.chrome-link:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
