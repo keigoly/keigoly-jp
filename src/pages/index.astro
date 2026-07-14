@@ -28,10 +28,22 @@ const ogImage = new URL("/hero/slide-1.png", Astro.site);
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>
-    <main class="animate-fade-in relative h-dvh w-full overflow-hidden bg-black opacity-0">
+    <!-- overflow-clip: hidden と違いプログラム的スクロールも不能にする。
+         Tab フォーカス時の scrollIntoView で斜めスライスが横ずれするのを防ぐ -->
+    <main class="animate-fade-in relative h-dvh w-full overflow-clip bg-black opacity-0">
       <!-- 斜めスライスゲート -->
       <div class="gates" role="navigation" aria-label="サイト選択">
-        <a href="https://official.keigoly.jp/" class="gate">
+        <!-- 封印スライス (COMING SOON・リンクなし) -->
+        <div class="gate gate-soon">
+          <div class="gate-bg gate-bg-soon"></div>
+          <div class="gate-label">
+            <span class="en">COMING<br />SOON</span>
+            <span class="rule"></span>
+            <span class="ja">近日公開</span>
+          </div>
+        </div>
+
+        <a href="https://official.keigoly.jp/" class="gate gate-official">
           <div class="gate-bg">
             <img
               src="/hero/slide-1.png"
@@ -51,7 +63,7 @@ const ogImage = new URL("/hero/slide-1.png", Astro.site);
           <span class="sr-only">オフィシャルサイトへ</span>
         </a>
 
-        <a href="https://claw.keigoly.jp/" class="gate">
+        <a href="https://claw.keigoly.jp/" class="gate gate-claw">
           <div class="gate-bg gate-bg-claw">
             <img
               src="/hero/keigoly-walking.png"

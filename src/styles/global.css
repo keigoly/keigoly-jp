@@ -97,8 +97,48 @@ body {
 }
 
 /* 端数ずれで画像が届かない場合の保険 (黒地に馴染ませる) */
-.gate:first-child .gate-bg {
+.gate-official .gate-bg {
   background: #070707;
+}
+
+/* 封印スライス (COMING SOON) — リンクなし。沈んだまま、金の残光だけ灯す */
+.gate-soon {
+  cursor: default;
+}
+
+.gate-soon:hover {
+  flex-grow: 1; /* 非リンクは拡幅しない */
+}
+
+.gate-bg-soon {
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 50% 45%,
+      rgba(201, 168, 97, 0.14),
+      rgba(201, 168, 97, 0.04) 55%,
+      transparent 75%
+    ),
+    linear-gradient(180deg, #111111 0%, #070707 100%);
+}
+
+.gate-soon .gate-label {
+  opacity: 0.42;
+}
+
+.gate-soon:hover .gate-label {
+  opacity: 0.72;
+}
+
+.gate-soon .gate-label .en {
+  color: color-mix(in srgb, var(--color-kg-text), transparent 22%);
+  /* 隣スライスの hover 拡幅で押し縮められても見切れない控えめサイズ */
+  font-size: clamp(1.05rem, 2.6vw, 2rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+}
+
+.gate-soon .gate-label .ja {
+  color: var(--color-kg-text-muted);
 }
 
 /* CLAW スライス: claw.keigoly.jp の hero-dusk を移植
@@ -163,7 +203,10 @@ body {
 }
 .gate:last-child .gate-label {
   inset: 0 0 6vh 0;
-  /* CLAW ラベルを歩き姿と Clawくんの中間へ寄せる */
+}
+
+/* CLAW ラベルを歩き姿と Clawくんの中間へ寄せる */
+.gate-claw .gate-label {
   padding-left: 14%;
 }
 
@@ -314,11 +357,22 @@ body {
 
   .gate:last-child .gate-label {
     inset: 0 9vw 0 0;
+  }
+
+  .gate-claw .gate-label {
     padding-left: 0;
   }
 
   .gate-bg > img.gate-photo {
-    transform: translateX(-20%);
+    /* -27%: 写真左端(実測1311px幅)が通常時のスライス可視左端(スキュー分含む)を必ず覆う位置。
+       hover 拡幅時はさらに左へパン(-33%)して黒地の露出を根絶する(実測 2026-07-15) */
+    transform: translateX(-27%);
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gate:hover .gate-bg > img.gate-photo,
+  .gate:focus-visible .gate-bg > img.gate-photo {
+    transform: translateX(-33%);
   }
 
   /* 歩き姿(左) — CLAW ラベル(中) — Clawくん(右下) */
